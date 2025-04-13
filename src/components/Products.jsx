@@ -23,7 +23,7 @@ const Products = () => {
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
-      const response = await fetch("https://fakestoreapi.com/products/");
+      const response = await fetch("http://98.80.205.202:31370/products");
       if (componentMounted) {
         setData(await response.clone().json());
         setFilter(await response.json());
