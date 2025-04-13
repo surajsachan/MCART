@@ -9,6 +9,9 @@ const handleCart = (state = getInitialCart(), action) => {
   let updatedCart;
 
   switch (action.type) {
+    case "CLEAR_CART":
+      return [];
+      
     case "ADDITEM":
       // Check if product already in cart
       const exist = state.find((x) => x.id === product.id);

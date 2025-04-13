@@ -4,10 +4,28 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { NavLink } from 'react-router-dom'
 import { useAuth } from 'react-oidc-context';
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 const Checkout = () => {
   const state = useSelector((state) => state.handleCart);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const auth=useAuth();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("Order created successfully!");
+    
+    localStorage.removeItem("cart");
+    
+    dispatch({
+      type: "CLEAR_CART",
+      payload: []
+    });
+    navigate("/");
+  };
 
   const EmptyCart = () => {
     return (
@@ -275,6 +293,7 @@ const Checkout = () => {
                     <button
                       className="w-100 btn btn-primary "
                       type="submit" disabled={!auth.isAuthenticated}
+                      onClick={handleSubmit}
                     >
                       Continue to checkout
                     </button>
