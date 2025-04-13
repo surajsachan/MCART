@@ -40,37 +40,43 @@ const Products = () => {
     };
   }, []);
 
-  const handleSearch = async () => {
+
+  useEffect(() => {
     const trimmedText = searchText.trim();
-
-    if (trimmedText === "") {
-      setFilter(data);
-      setNoResult(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `http://98.80.205.202:31455/api/products/search/${trimmedText}`
-      );
-      if (!response.ok) throw new Error("Search failed");
-
-      const result = await response.json();
-      if (Array.isArray(result) && result.length > 0) {
-        setFilter(result);
+  
+    const delayDebounce = setTimeout(async () => {
+      if (trimmedText === "") {
+        setFilter(data);
         setNoResult(false);
-      } else {
-        setFilter([]);
-        setNoResult(true);
+        return;
       }
-    } catch (error) {
-      console.error("Search error:", error);
-      toast.error("Error fetching search results");
-    } finally {
-      setLoading(false);
-    }
-  };
+  
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `http://98.80.205.202:31455/api/products/search/${trimmedText}`
+        );
+        if (!response.ok) throw new Error("Search failed");
+  
+        const result = await response.json();
+        if (Array.isArray(result) && result.length > 0) {
+          setFilter(result);
+          setNoResult(false);
+        } else {
+          setFilter([]);
+          setNoResult(true);
+        }
+      } catch (error) {
+        console.error("Search error:", error);
+        toast.error("Error fetching search results");
+      } finally {
+        setLoading(false);
+      }
+    }, 500); // debounce delay
+  
+    return () => clearTimeout(delayDebounce);
+  }, [searchText, data]);
+  
 
   const filterProduct = (cat) => {
     const updatedList = data.filter((item) => item.category === cat);
@@ -204,18 +210,17 @@ const Products = () => {
       <div className="row justify-content-center">
         <div className="container mt-4 d-flex justify-content-center">
           <div className="input-group mb-3" style={{ maxWidth: "350px" }}>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
             <button
               className="btn btn-outline-dark"
               type="button"
-              onClick={handleSearch}
+              //onClick={handleSearch}
             >
               Search
             </button>

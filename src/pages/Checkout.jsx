@@ -2,8 +2,12 @@ import React from "react";
 import { Footer, Navbar } from "../components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { NavLink } from 'react-router-dom'
+import { useAuth } from 'react-oidc-context';
+
 const Checkout = () => {
   const state = useSelector((state) => state.handleCart);
+  const auth=useAuth();
 
   const EmptyCart = () => {
     return (
@@ -111,6 +115,7 @@ const Checkout = () => {
                           id="email"
                           placeholder="you@example.com"
                           required
+                          value={auth.user?.profile?.email || ""}
                         />
                         <div className="invalid-feedback">
                           Please enter a valid email address for shipping
@@ -269,7 +274,7 @@ const Checkout = () => {
 
                     <button
                       className="w-100 btn btn-primary "
-                      type="submit" disabled
+                      type="submit" disabled={!auth.isAuthenticated}
                     >
                       Continue to checkout
                     </button>
@@ -288,6 +293,17 @@ const Checkout = () => {
       <div className="container my-3 py-3">
         <h1 className="text-center">Checkout</h1>
         <hr />
+        {
+            auth.isAuthenticated ? null:
+            (
+              <div className="d-flex flex-column justify-content-center align-items-center">
+                <h2 className="text-center mb-3">Oops, You are not Logged In, Login First</h2>
+                <NavLink className="btn btn-outline-dark" onClick={() => auth.signinRedirect()}>
+                  <i className="fa fa-sign-in-alt mr-1"></i> Login
+                </NavLink>
+              </div>
+            )
+        }
         {state.length ? <ShowCheckout /> : <EmptyCart />}
       </div>
       <Footer />
