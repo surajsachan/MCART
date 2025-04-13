@@ -3,8 +3,11 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
+    signInWithPopup,
+    GoogleAuthProvider,
   } from "firebase/auth";
   import { auth } from "../firebase/firebase.config";
+  const provider = new GoogleAuthProvider();
   
   const register = async (email, password) => {
     try {
@@ -53,10 +56,22 @@ import {
           }, reject);
       });
   };
+
+  const signInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      return result.user;
+    } catch (error) {
+      console.error("Google Sign-In Error:", error.code, error.message);
+      throw new Error("Google Sign-In failed. Please try again.");
+    }
+  };
+
   const authService = {
     register,
     login,
     logout,
-    getCurrentUser
+    getCurrentUser,
+    signInWithGoogle
   };
   export default authService;

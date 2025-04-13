@@ -59,6 +59,21 @@ function Login() {
                     </div>
                 </Form>
             </div>
+            <Button
+              variant="danger"
+              className="w-100 mt-3"
+              onClick={async () => {
+                try {
+                  const user = await authService.signInWithGoogle();
+                  login(user);
+                  navigate('/');
+                } catch (err) {
+                  setError(err.message);
+                }
+              }}
+            >
+              Sign in with Google
+            </Button>
             <div className="p-4 box mt-3 text-center">
                 Don't have an account? <Link to="/register">Sign up</Link>
             </div>
