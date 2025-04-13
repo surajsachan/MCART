@@ -20,6 +20,7 @@ import {
 import ScrollToTop from "./components/ScrollToTop";
 import { Toaster } from "react-hot-toast";
 import SessionInfo from "./pages/SessionInfo";
+import Profile from "./pages/Profile";
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="*" element={<PageNotFound />} />
           <Route path="/product/*" element={<PageNotFound />} />
+          <Route path="/profile" element={<Profile/>}/>
         </Routes>
       </Provider>
     </ScrollToTop>

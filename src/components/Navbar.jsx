@@ -34,7 +34,15 @@ const Navbar = () => {
                         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form> */}
-                        <NavLink className="btn btn-outline-dark m-2" onClick={() => auth.signinRedirect()}><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
+                        {
+                            auth.isAuthenticated ? 
+                            (
+                                <NavLink className="btn btn-outline-dark m-2" to="/profile"><i className="fa fa-sign-in-alt mr-1"></i>{auth.user.profile.email}</NavLink>
+                            ):
+                            (
+                                <NavLink className="btn btn-outline-dark m-2" onClick={() => auth.signinRedirect()}><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
+                            )
+                        }
                         {/* <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink> */}
                         <NavLink to="/cart" className="btn btn-outline-dark m-2"><i className="fa fa-cart-shopping mr-1"></i> Cart ({state.length}) </NavLink>
                     </div>
