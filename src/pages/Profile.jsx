@@ -1,16 +1,18 @@
 import { useAuth } from "react-oidc-context";
 import { Footer, Navbar } from "../components";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import AuthContext from "../context/AuthContext";
 
 const Profile=()=>
 {
     const [userData, setUserData]=useState(null);
+    const { currentUser } = useContext(AuthContext);
     
     const auth=useAuth();
     useEffect(()=>{
         const getUser=async()=>
         {
-            const response = await fetch(`http://98.80.205.202:30467/api/users/getUser/${auth.user.profile.email}`);
+            const response = await fetch(`http://98.80.205.202:30467/api/users/getUser/${currentUser?.email}`);
             const data=await response.json();
             setUserData(data);
 

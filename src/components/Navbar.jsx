@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useAuth } from 'react-oidc-context';
+// import { useAuth } from 'react-oidc-context';
+import AuthContext from '../context/AuthContext';
 
 const Navbar = () => {
-    const auth = useAuth();
+    // const auth = useAuth();
+    const { currentUser } = useContext(AuthContext);
     const state = useSelector(state => state.handleCart)
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top">
@@ -35,12 +37,13 @@ const Navbar = () => {
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form> */}
                         {
-                            auth.isAuthenticated ? 
+                            currentUser?.email ? 
                             (
-                                <NavLink className="btn btn-outline-dark m-2" to="/profile"><i className="fa fa-sign-in-alt mr-1"></i>{auth.user.profile.email}</NavLink>
+                                <NavLink className="btn btn-outline-dark m-2" to="/"><i className="fa fa-sign-in-alt mr-1"></i>{currentUser?.email}</NavLink>
                             ):
                             (
-                                <NavLink className="btn btn-outline-dark m-2" onClick={() => auth.signinRedirect()}><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
+                                // <NavLink className="btn btn-outline-dark m-2" onClick={() => auth.signinRedirect()}><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
+                                <NavLink className="btn btn-outline-dark m-2" to="/login"><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
                             )
                         }
                         {/* <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink> */}

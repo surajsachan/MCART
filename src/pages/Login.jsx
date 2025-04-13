@@ -1,50 +1,70 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Footer, Navbar } from "../components";
+import React, { useState, useContext } from 'react';
+import authService from '../services/auth.service';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
+import { Form, Alert, Container, FloatingLabel, Button } from "react-bootstrap";
 
-const Login = () => {
-  return (
-    <>
-      <Navbar />
-      <div className="container my-3 py-3">
-        <h1 className="text-center">Login</h1>
-        <hr />
-        <div class="row my-4 h-100">
-          <div className="col-md-4 col-lg-4 col-sm-8 mx-auto">
-            <form>
-              <div class="my-3">
-                <label for="display-4">Email address</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="floatingInput"
-                  placeholder="name@example.com"
-                />
-              </div>
-              <div class="my-3">
-                <label for="floatingPassword display-4">Password</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="floatingPassword"
-                  placeholder="Password"
-                />
-              </div>
-              <div className="my-3">
-                <p>New Here? <Link to="/register" className="text-decoration-underline text-info">Register</Link> </p>
-              </div>
-              <div className="text-center">
-                <button class="my-2 mx-auto btn btn-dark" type="submit" disabled>
-                  Login
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </>
-  );
-};
+function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            await authService.login(email, password);
+            login(await authService.getCurrentUser());
+            navigate('/');
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Container style={{ width: "400px" }}>
+            <div className="p-4 box" >
+                <h2 className="mb-3">Login</h2>
+
+                {error && <Alert variant="danger">{error}</Alert>}
+
+                <Form onSubmit={handleSubmit}>
+                    <FloatingLabel
+                        controlId="formBasicEmail"
+                        label="Email address"
+                        className="mb-3"
+                    >
+                        <Form.Control required type="email" placeholder="name@example.com" onChange={(e) => setEmail(e.target.value)} />
+                    </FloatingLabel>
+
+                    <FloatingLabel
+                        controlId="formBasicPassword"
+                        label="Password"
+                        className="mb-3"
+                    >
+                        <Form.Control required type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} autocomplete="current-password" />
+                    </FloatingLabel>
+
+                    <div className="d-grid gap-2">
+                        <Button variant="primary" type="Submit" disabled={loading}>
+                            {loading ? 'Logging in...' : 'Login'}
+                        </Button>
+                    </div>
+                </Form>
+            </div>
+            <div className="p-4 box mt-3 text-center">
+                Don't have an account? <Link to="/register">Sign up</Link>
+            </div>
+        </Container>
+    );
+}
 
 export default Login;
+
