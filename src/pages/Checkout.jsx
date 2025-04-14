@@ -317,7 +317,7 @@ const Checkout = () => {
             (
               <div className="d-flex flex-column justify-content-center align-items-center">
                 <h2 className="text-center mb-3">Oops, You are not Logged In, Login First</h2>
-                <NavLink className="btn btn-outline-dark" onClick={() => auth.signinRedirect()}>
+                <NavLink className="btn btn-outline-dark" to="/login">
                   <i className="fa fa-sign-in-alt mr-1"></i> Login
                 </NavLink>
               </div>
