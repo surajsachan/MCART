@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Footer, Navbar } from "../components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -6,13 +6,14 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from 'react-oidc-context';
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 
 const Checkout = () => {
   const state = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const auth=useAuth();
+  const { currentUser } = useContext(AuthContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -133,7 +134,7 @@ const Checkout = () => {
                           id="email"
                           placeholder="you@example.com"
                           required
-                          value={auth.user?.profile?.email || ""}
+                          value={currentUser?.email || ""}
                         />
                         <div className="invalid-feedback">
                           Please enter a valid email address for shipping
@@ -292,7 +293,7 @@ const Checkout = () => {
 
                     <button
                       className="w-100 btn btn-primary "
-                      type="submit" disabled={!auth.isAuthenticated}
+                      type="submit" disabled={!currentUser?.email}
                       onClick={handleSubmit}
                     >
                       Continue to checkout
@@ -313,7 +314,7 @@ const Checkout = () => {
         <h1 className="text-center">Checkout</h1>
         <hr />
         {
-            auth.isAuthenticated ? null:
+            currentUser ? null:
             (
               <div className="d-flex flex-column justify-content-center align-items-center">
                 <h2 className="text-center mb-3">Oops, You are not Logged In, Login First</h2>
